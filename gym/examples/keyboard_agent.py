@@ -1,9 +1,10 @@
 #!/usr/bin/env python
+import numpy as np
 import sys, gym, time
 from skimage.color import rgb2gray
-import numpy as np
 from PIL import Image
 import os
+from os import walk
 
 
 #
@@ -113,6 +114,29 @@ while 1:
 actions = np.array(action_array)
 states = np.array(state_array)
 
+# Save file
+def path_name(env):
+    directory = 'datasets/'
+    env_name = env.unwrapped.spec.id.lower()
+    path = os.path.join(directory, env_name)
+    dir_exist = os.path.isdir(path)
+    dataset_name = env_name
+
+    if not dir_exist:
+        os.mkdir(path)
+
+    count = 1
+    for dirname, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            print(os.path.join(dirname, filename))
+            count += 1
+    #Create and save dataset
+    loc = dataset_name.find('-')
+    filepath = dataset_name[:loc]+str(count)
+    
+    return filepath
+
+filepath = path_name(env)
 np.savez_compressed('RoadRunner.npz', states = states, actions = actions)
 
-print("Done writing to file")
+print("Data saved as", filepath)
