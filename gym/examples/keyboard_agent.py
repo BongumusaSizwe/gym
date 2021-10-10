@@ -16,7 +16,7 @@ from os import walk
 #
 
 
-env = gym.make('LunarLander-v2' if len(sys.argv)<2 else sys.argv[1])
+env = gym.make('RoadRunner-v0' if len(sys.argv)<2 else sys.argv[1])
 
 if not hasattr(env.action_space, 'n'):
     raise Exception('Keyboard agent only supports discrete action spaces')
@@ -134,9 +134,9 @@ def path_name(env):
     loc = dataset_name.find('-')
     filepath = dataset_name[:loc]+str(count)
     
-    return filepath
+    return directory + env_name +'/' +  filepath
 
 filepath = path_name(env)
-np.savez_compressed('RoadRunner.npz', states = states, actions = actions)
+np.savez_compressed(filepath, states = states, actions = actions)
 
 print("Data saved as", filepath)
